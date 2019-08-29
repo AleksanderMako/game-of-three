@@ -1,0 +1,31 @@
+version: "3"
+networks:
+  dev-net:
+    
+services:
+  api:
+    container_name: "api"
+    working_dir: /api
+    image: "node:10"
+    volumes:
+     - .:/api
+    ports:
+      - 3000:3000
+    command: bash -c "npm install && npm run start-dev"
+    depends_on:
+      - database
+    networks:
+      - dev-net
+
+  
+  database:
+    container_name: "db"
+    image: mongo
+    restart: always
+    ports:
+      - 27019:27019
+    command: mongod --port 27019 --bind_ip_all
+    networks:
+      - dev-net
+    
+    
