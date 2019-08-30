@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 
-function gameModel() {
+function gameModel(db) {
     const gameID = schema.ObjectId;
     const gameSchema = new schema({
 
@@ -33,9 +33,8 @@ function gameModel() {
             required: true
         }
     });
-    const gameModel = mongoose.model("game", gameSchema);
-    const gameInstance = new gameModel();
-    return gameInstance;
+    const gameModel = db.model("game", gameSchema);
+    return gameModel;
 
 }
 module.exports = {
