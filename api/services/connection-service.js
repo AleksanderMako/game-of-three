@@ -6,7 +6,8 @@ function connect() {
     return new Promise((resolve, reject) => {
 
         const db = mongoose.connect("mongodb://db:27019/games", {
-            useNewUrlParser: true
+            useNewUrlParser: true,
+            useFindAndModify: false 
         }, (err, db) => {
 
             if (err != null) {
@@ -15,6 +16,7 @@ function connect() {
             resolve(db);
         });
     });
+    
 }
 
 module.exports = {

@@ -3,10 +3,7 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 
 function gameModel(db) {
-    const gameID = schema.ObjectId;
     const gameSchema = new schema({
-
-        gameId: gameID,
 
         player1ID: {
             type: String,
@@ -14,7 +11,7 @@ function gameModel(db) {
         },
         player2ID: {
             type: String,
-            required: true
+            
         },
         player1Status: {
             type: Boolean,

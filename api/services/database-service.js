@@ -4,10 +4,9 @@ const game = require('../models/game');
 
 module.exports = class DatabaseService {
 
-    constructor(databaseConnection) {
-        //TODO: remove this connection member 
-        this.connection = databaseConnection;
-        this.gameInstance = game.gameModel(databaseConnection);
+    constructor( gameSchema ,constants) {
+        this.gameInstance = gameSchema;
+        this.constants = constants;
     }
 
     create(game) {
@@ -22,11 +21,11 @@ module.exports = class DatabaseService {
         });
         return new Promise((resolve, reject) => {
 
-            newGame.save((err) => {
+            newGame.save((err, doc) => {
                 if (err) {
                     reject(err);
                 }
-                resolve();
+                resolve(doc._id);
             });
         });
 
@@ -39,8 +38,41 @@ module.exports = class DatabaseService {
                 if (err) {
                     reject(err);
                 }
-                resolve(game);
+                resolve(game.toObject());
 
+            });
+        });
+    }
+
+    findOpenGame() {
+        return new Promise((resolve, reject) => {
+            this.gameInstance.findOne({ gameStatus: this.constants.awaitingPlayer }, (err, game) => {
+                // there should be one game open at all times
+                if (err) {
+                    reject(err);
+                }
+                if (game) {
+                    resolve(game.toObject());
+
+                } else resolve();
+            });
+        });
+
+    }
+
+    update(game) {
+        return new Promise((resolve, reject) => {
+            this.gameInstance.findOneAndUpdate({ _id: game._id }, {
+
+                player2ID: game.player2ID,
+                player2Status: game.player2Status,
+                gameStatus: game.gameStatus
+
+            }, (err, doc) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(doc);
             });
         });
     }

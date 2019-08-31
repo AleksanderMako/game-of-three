@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "nodejs ./bin/www",
-    "start-dev": "nodemon ./bin/www localhost 3000"
+    "start": "nodejs server.js",
+    "start-dev": "nodemon server.js localhost 3000",
+    "test": "./node_modules/mocha/bin/mocha"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -15,6 +16,12 @@
     "mongoose": "5.6.11",
     "morgan": "^1.9.1",
     "nodemon": "1.19.1",
-    "static-favicon": "~1.0.0"
+    "socket.io": "2.2.0",
+    "static-favicon": "~1.0.0",
+    "uuid": "3.3.3"
+  },
+  "devDependencies": {
+    "chai": "4.2.0",
+    "mocha": "6.2.0"
   }
 }

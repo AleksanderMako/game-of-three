@@ -1,0 +1,26 @@
+version: "3"
+networks:
+  test-net:
+
+services:
+  api:
+    container_name: "api"
+    build: .
+    ports:
+      - 3000:3000
+    command: bash -c "npm run test"
+    depends_on:
+      - database
+    networks:
+     - test-net
+
+  
+  database:
+    container_name: "db"
+    image: mongo
+    restart: always
+    command: mongod --port 27019 --bind_ip_all
+    networks:
+     - test-net
+    ports:
+      - 27019:27019

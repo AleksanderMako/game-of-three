@@ -1,8 +1,9 @@
+"use strict";
 module.exports = class Constants {
-
-    static online = true;
-    static offline = false;
-    static closed = true;
-    static awaitingPlayer = false;
-
+    constructor() {
+        this.online = true;
+        this.offline = false;
+        this.closed = true;
+        this.awaitingPlayer = false;
+    }
 }
