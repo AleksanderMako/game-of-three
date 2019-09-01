@@ -38,8 +38,10 @@ module.exports = class DatabaseService {
                 if (err) {
                     reject(err);
                 }
-                resolve(game.toObject());
-
+                if(game){
+                    resolve(game.toObject());
+                }
+                else resolve();
             });
         });
     }
@@ -63,12 +65,14 @@ module.exports = class DatabaseService {
     update(game) {
         return new Promise((resolve, reject) => {
             this.gameInstance.findOneAndUpdate({ _id: game._id }, {
-
+                player1ID: game.player1ID,
                 player2ID: game.player2ID,
+                player1Status: game.player1Status,
                 player2Status: game.player2Status,
-                gameStatus: game.gameStatus
+                gameStatus: game.gameStatus,
+                currentNumber: game.currentNumber
 
-            }, (err, doc) => {
+            }, {new:true},(err, doc) => {
                 if (err) {
                     reject(err);
                 }

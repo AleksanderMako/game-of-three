@@ -34,7 +34,11 @@ module.exports = class RegisterController {
             try {
                 gameID = await this.dbService.create(newGame);
             } catch (error) {
-                console.log("ERROR: error while creating object \n" + error )
+                console.log("ERROR: error while creating object \n" + error)
+            }
+            return {
+                playerID: playerID,
+                gameID: gameID
             }
         }
         // otherwise just join an open game 
@@ -51,12 +55,15 @@ module.exports = class RegisterController {
                 //TODO: handle this error;
             }
             gameID = updatedDoc.id;
+            
+            return {
+                playerID: playerID,
+                gameID: gameID,
+                currentNumber: updatedDoc.currentNumber
+            }
         }
 
-        return {
-            playerID: playerID,
-            gameID: gameID
-        }
+      
     }
 
 }

@@ -4,18 +4,21 @@ const connService = require("../services/connection-service");
 const Constants = require("../constants/constants");
 const registerController = require("../controllers/register");
 const game = require('../models/game');
+const gameController = require("../controllers/game");
 
 let conn;
 let dbService;
 let constants;
 let schema;
+let gController;
 
 before(async function () {
     conn = await connService.connect();
     schema = game.gameModel(conn);
     constants = new Constants();
     dbService = new databaseService(schema, constants);
-    controller = new registerController(dbService, constants);
+    rController = new registerController(dbService, constants);
+    gController =new  gameController(dbService, constants);
 
 });
 
@@ -28,7 +31,7 @@ describe("database service ", function () {
         it("should create records in mongo db ", async function () {
 
             //Arrange 
-            var testCreate = {
+            const testCreate = {
                 player1ID: "p1",
                 player2ID: "p2",
                 player1Status: true,
@@ -53,12 +56,12 @@ describe("database service ", function () {
     });
 });
 
-describe("register controller ", function () {
+describe("register Controller ", function () {
     describe("register", function () {
         it("should create new db record when no open games are available ", async function () {
 
             //Act 
-            const regDetails = await controller.registerPlayer();
+            const regDetails = await rController.registerPlayer();
 
             //Assert 
             expect(regDetails.playerID).to.not.be.null;
@@ -77,14 +80,108 @@ describe("register controller ", function () {
                 gameStatus: false,
                 currentNumber: 3
             }
-            const gameID = await dbService.create(game);
+            await dbService.create(game);
 
             //Act 
-            const regDetails = await controller.registerPlayer();
+            await rController.registerPlayer();
 
             //Assert 
             const openGame = await dbService.findOpenGame();
             expect(openGame).to.be.undefined;
+
+        });
+
+        function countHelper() {
+            return new Promise((resolve, reject) => {
+                conn.collections.games.countDocuments({}, (err, c) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    else {
+                        resolve(c);
+                    }
+                });
+            });
+        }
+
+        it("should not make a new game record whenever there is an open game and p2 attempts to join ", async function () {
+            // Arrange 
+            let allGamesCount;
+            let currentCount;
+            const game = {
+                player1ID: "p1",
+                player2ID: "",
+                player1Status: true,
+                player2Status: false,
+                gameStatus: false,
+                currentNumber: 3
+            }
+            try {
+                await dbService.create(game);
+                allGamesCount = await countHelper();
+                currentCount = await countHelper();
+
+                //Act 
+                await rController.registerPlayer();
+
+            } catch (error) {
+                console.log("ERROR: " + error);
+            }
+
+
+            //Assert 
+            expect(allGamesCount).equal(currentCount);
+            expect(currentCount).equal(1);
+
+        });
+    });
+});
+
+describe("game controller ", function () {
+    describe("set number", function () {
+        it("should correctly update the current game number ", async function () {
+            //Arrange 
+            let gameID;
+            let updatedGame;
+
+            const game = {
+                player1ID: "p1",
+                player2ID: "",
+                player1Status: true,
+                player2Status: false,
+                gameStatus: false,
+                currentNumber: 3
+            }
+
+            try {
+                gameID = await dbService.create(game);
+                console.log("DEBUG: "+JSON.stringify(registrationDetails));
+            } catch (error) {
+
+                console.log("ERROR:" + error);
+            }
+
+            const data = {
+                gameId: gameID,
+                number: 5
+            }
+
+            //Act 
+            try {
+                await gController.setNumber(data);
+
+            } catch (error) {
+
+                console.log("ERROR:" + error);
+            }
+
+            //Assert 
+            try {
+                updatedGame = await dbService.findById(data.gameId);
+            } catch (error) {
+                console.log("ERROR:" + error);
+            }
+            expect(updatedGame.currentNumber).equal(5);
 
         });
     });
