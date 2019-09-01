@@ -119,10 +119,10 @@ describe("register Controller ", function () {
             try {
                 await dbService.create(game);
                 allGamesCount = await countHelper();
-                currentCount = await countHelper();
 
                 //Act 
                 await rController.registerPlayer();
+                currentCount = await countHelper();
 
             } catch (error) {
                 console.log("ERROR: " + error);
