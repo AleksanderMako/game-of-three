@@ -1,16 +1,22 @@
 version: "3.5"
 networks:
+  dev-net:
    external:
-     name: soscket-dev-net
+     name: ${DOCKER_NETWORK_NAME}
 services:
   client: 
-    container_name: "client"
-    working_dir : /client
+    container_name: ${CONTAINER_NAME}
+    environment:
+      - LOW
+      - HIGH
+      - SOCKET_URL
+    working_dir : /${WORKING_DIR}
     image: "node:10"
-    volumes: .:/client
+    volumes: 
+      - .:/${VOLUMES}
     command: bash -c "npm run dev"
     ports:
-      - 4000:4000
+      - ${PORT}:${PORT}
     networks:
-      - soscket-dev-net
+      - ${DOCKER_NETWORK}
       

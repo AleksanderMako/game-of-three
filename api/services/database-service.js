@@ -76,7 +76,7 @@ module.exports = class DatabaseService {
                 if (err) {
                     reject(err);
                 }
-                resolve(doc);
+                resolve(doc.toObject());
             });
         });
     }

@@ -54,7 +54,7 @@ module.exports = class RegisterController {
             } catch (error) {
                 //TODO: handle this error;
             }
-            gameID = updatedDoc.id;
+            gameID = updatedDoc._id;
             
             return {
                 playerID: playerID,

@@ -10,14 +10,19 @@ module.exports = class GameController {
         const game = await this.getGame(data);
 
         // set the currentNumber to data.number
-        game.currentNumber = data.number;
+        game.currentNumber = data.currentNumber;
 
         try {
             updatedGame = await this.dbService.update(game);
         } catch (error) {
-            console.log("ERROR in game constroller setNumber : " + err);
+            console.log("ERROR in game controller setNumber : " + err);
         }
-        if (updatedGame.currentNumber !== data.number) throw new Error("current number in Database was not updated");
+        if (updatedGame.currentNumber !== data.currentNumber) {
+            console.log("DEBUG: number in database is  " + updatedGame.currentNumber);
+            console.log("DEBUG: game object in database is  " + JSON.stringify(updatedGame));
+
+            throw new Error("current number in Database was not updated");
+        }
 
     }
 
@@ -37,10 +42,10 @@ module.exports = class GameController {
 
         let game;
         try {
-            game = await this.dbService.findById(data.gameId);
+            game = await this.dbService.findById(data.gameID);
 
         } catch (error) {
-            console.log("ERROR in game constroller getGame : " + err);
+            console.log("ERROR in game controller getGame : " + error);
         }
         return game;
     }
