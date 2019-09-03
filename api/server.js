@@ -43,6 +43,7 @@ module.exports = class Server {
                     if (this.gameController.doesGameExist(data)) {
                         await this.gameController.setNumber(data);
                     }
+                    // TODO: else return an error
                 } catch (error) {
                     console.log("DEBUG: SET NUMBER " + JSON.stringify(data));
                     console.log("ERROR: while setting number " + error);
@@ -58,7 +59,7 @@ module.exports = class Server {
                     console.log("ERROR: while retreiving socket " + error);
                     socket.emit("Error", error);
                 }
-
+                // end of number event 
             });
             // TODO: handle socket disconection / remove connection from map 
             socket.on("disconnect", () => { });

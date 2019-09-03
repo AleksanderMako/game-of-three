@@ -55,7 +55,6 @@ module.exports = class Client {
   }
 
   computeNumber() {
-    //TODO: configure this with env vars low and high 
     let newNumber;
     if (this.startGame) {
       const randInt = this.randomInt(3, 100);
