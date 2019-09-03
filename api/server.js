@@ -1,30 +1,30 @@
 var app = require('express')();
-var server = require('http');
+var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
 module.exports = class Server {
 
     // feed controllers to server constructor 
     constructor(registrationController, gameController) {
-
-        this.server = server.Server(app);
+        if (!registrationController) {
+            throw new Error("ERROR: empty registration controller passed")
+        }
+        this.server = server;
         this.registerController = registrationController;
         this.gameController = gameController;
         this.connectionList = new Map();
-
     }
     // TODO: INCLUDE SOME VALIDATION FOR INCOMING DATA 
     async start() {
-        this.server.listen(3000);
-        console.log("INFO: server is running ");
 
-        io.sockets.on("connection", function (socket) {
+        io.on("connection", (socket) => {
 
             console.log("INFO: socket connected ");
-
             // register event 
-            socket.on("register", async function () {
-                const registrationData = await this.registerController.register();
+            socket.on("register", async (data) => {
+                const registrationData = await this.registerController.registerPlayer();
+                console.log("INFO: registration data " + JSON.stringify(registrationData));
+
                 this.connectionList.set(registrationData.playerID, socket);
                 socket.emit("register response", registrationData);
             });
@@ -41,8 +41,8 @@ module.exports = class Server {
                 }
                 // get receiving socket 
                 try {
-                    const receivingSocket = this.getSocket();
-                    receivingSocket.emit("get-number",data.number);
+                    const receivingSocket = await this.getSocket();
+                    receivingSocket.emit("get-number", data.number);
                 } catch (error) {
                     socket.emit("Error", error);
                 }
@@ -51,14 +51,18 @@ module.exports = class Server {
             // TODO: handle socket disconection / remove connection from map 
             socket.on("disconnect", () => { });
         })
+
+        this.server.listen(3000, () => {
+            console.log("INFO: server is running ");
+        });
     }
-    getSocket(data) {
+    async getSocket(data) {
         const game = await this.gameController.getGame(data);
         // if true  = if closed => both players have joined 
         if (game.gameStatus) {
             if (data.gameID === game.player1ID) return this.connectionList.get(game.player2ID);
             else if (data.gameID == game.player2ID) return this.connectionList.get(game.player1ID);
-            else throw new Error("you are not a player in the game with ID: "+ data.gameID);
+            else throw new Error("you are not a player in the game with ID: " + data.gameID);
         }
     }
 }

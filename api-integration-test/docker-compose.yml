@@ -1,0 +1,16 @@
+version: "3.5"
+networks:
+  socket-net:
+    external:
+      name: socket-network
+services: 
+   client:
+     container_name: test
+     build: .
+     ports:
+       - 3500:3500
+     command: bash -c "npm run test"
+     networks:
+      - socket-net 
+     
+       

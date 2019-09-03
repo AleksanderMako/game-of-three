@@ -1,4 +1,7 @@
-version: "3"
+version: "3.5"
+networks:
+  socket-net:
+    name: socket-network
 services:
   api:
     container_name: "api"
@@ -8,11 +11,16 @@ services:
     command: bash -c "npm start"
     depends_on:
       - database
+    networks: 
+      - socket-net
 
   
   database:
-    container_name: "mongoDB"
+    container_name: "db"
     image: mongo
     restart: always
+    command: mongod --port 27019 --bind_ip_all
     ports:
       - 27019:27019
+    networks:
+      - socket-net

@@ -1,6 +1,7 @@
-version: "3"
+version: "3.5"
 networks:
   dev-net:
+    name: soscket-dev-net
     
 services:
   api:

@@ -1,0 +1,16 @@
+version: "3.5"
+networks:
+   external:
+     name: soscket-dev-net
+services:
+  client: 
+    container_name: "client"
+    working_dir : /client
+    image: "node:10"
+    volumes: .:/client
+    command: bash -c "npm run dev"
+    ports:
+      - 4000:4000
+    networks:
+      - soscket-dev-net
+      
