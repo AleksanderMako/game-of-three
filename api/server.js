@@ -1,52 +1,60 @@
 var app = require('express')();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
-
-// TODO: set up event string in vars in const class 
+var logger = require("./config/logger");
 module.exports = class Server {
 
-    // feed controllers to server constructor 
     constructor(registrationController, gameController) {
-        if (!registrationController) {
-            throw new Error("ERROR: empty registration controller passed")
-        }
+
+        if (!registrationController) throw new Error("ERROR: empty registration controller passed in server constructor")
+        if (!gameController) throw new Error("ERROR: empty game controller passed in server constructor")
+
         this.server = server;
         this.registerController = registrationController;
         this.gameController = gameController;
         this.connectionList = new Map();
+        this.l = logger();
     }
-    // TODO: INCLUDE SOME VALIDATION FOR INCOMING DATA 
+
     async start() {
 
         io.on("connection", (socket) => {
-
-            console.log("INFO: socket connected \n");
+            this.l.info("Socket connected ");
 
             socket.emit("welcome", "Welcome to the game of 3 server");
 
             // register event 
             socket.on("register", async (data) => {
-                console.log("INFO:server received register request\n");
-                const registrationData = await this.registerController.registerPlayer();
-                console.log("INFO: registration data " + JSON.stringify(registrationData) + "\n");
+                this.validateRegisterEvent(data, socket);
+                this.l.info("server received register request");
+                try {
 
-                this.connectionList.set(registrationData.playerID, socket);
-                socket.emit("register-response", registrationData);
+                    const registrationData = await this.registerController.registerPlayer();
+                    this.l.debug("registration data " + JSON.stringify(registrationData) + "\n");
+                    this.connectionList.set(registrationData.playerID, socket);
+                    socket.emit("register-response", registrationData);
+
+                } catch (error) {
+                    this.l.error("while trying to register player:  " + JSON.stringify(error));
+                    socket.emit("Error while trying to register ", error);
+                }
             });
 
             // set number  event 
             // data has gameID,PID, current number 
             socket.on("number", async (data) => {
-                console.log("INFO:server received number request\n");
+                this.l.info("server received number request");
+                this.validateNumberEvent(data, socket);
 
                 try {
                     if (this.gameController.doesGameExist(data)) {
                         await this.gameController.setNumber(data);
                     }
-                    // TODO: else return an error
+                    else socket.emit("Error", "The game ID: " + data.gameID + " does not correspond to any ongoing game");
+
                 } catch (error) {
-                    console.log("DEBUG: SET NUMBER " + JSON.stringify(data));
-                    console.log("ERROR: while setting number " + error);
+                    this.l.debug("DEBUG: SET NUMBER " + JSON.stringify(data));
+                    this.l.error("while setting number " + JSON.stringify(error));
                     socket.emit("Error", "an error occured while trying to update the database " + error);
                 }
                 // get receiving socket 
@@ -56,17 +64,23 @@ module.exports = class Server {
                         receivingSocket.emit("get-number", data.currentNumber);
                     }
                 } catch (error) {
-                    console.log("ERROR: while retreiving socket " + error);
+                    this.l.error("while retreiving socket " + error);
                     socket.emit("Error", error);
                 }
                 // end of number event 
             });
-            // TODO: handle socket disconection / remove connection from map 
-            socket.on("disconnect", () => { });
+            socket.on("disconnect", () => {
+                this.connectionList.forEach((value, key, m) => {
+                    if (value === socket) {
+                        m.delete(key);
+                        this.l.info("Socket disconected");
+                    }
+                });
+            });
         })
 
         this.server.listen(3000, () => {
-            console.log("INFO: server is running ");
+            this.l.info(" server is running ");
         });
     }
     async getSocket(data) {
@@ -76,6 +90,27 @@ module.exports = class Server {
             if (data.playerID === game.player1ID) return this.connectionList.get(game.player2ID);
             else if (data.playerID == game.player2ID) return this.connectionList.get(game.player1ID);
             else throw new Error("you are not a player in the game with ID: " + data.gameID);
+        } return;
+    }
+    validateRegisterEvent(data, socket) {
+        if (data) {
+            socket.emit("Error", "register event does not require data");
+            return;
+        } return;
+    }
+    validateNumberEvent(data, socket) {
+        if (!data.gameID) {
+            socket.emit("Error", "number event requires the game ID");
+            return;
         }
+        else if (!data.playerID) {
+            socket.emit("Error", "number event requires the player ID");
+            return;
+        }
+        else if (!data.currentNumber) {
+            socket.emit("Error", "number event requires the computed number");
+            return;
+        }
+        return;
     }
 }

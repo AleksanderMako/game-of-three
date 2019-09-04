@@ -1,11 +1,12 @@
 "use strict";
 const uuidv1 = require('uuid/v1');
-
+const logger = require("../config/logger");
 module.exports = class RegisterController {
     constructor(databaseService, constants) {
 
         this.dbService = databaseService;
         this.constants = constants;
+        this.l = logger();
     }
 
     async registerPlayer() {
@@ -17,7 +18,8 @@ module.exports = class RegisterController {
         try {
             openGame = await this.dbService.findOpenGame();
         } catch (error) {
-            //TODO: handle this error
+            this.l.error("Error in register controller registerPlayer while trying to find open game: "+ JSON.stringify(error));
+            throw new Error("Error in register controller registerPlayer while trying to find open game: "+ JSON.stringify(error));
         }
 
         // generate new game record if there are no open games 
@@ -29,12 +31,13 @@ module.exports = class RegisterController {
                 player1Status: this.constants.online,
                 player2Status: this.constants.offline,
                 gameStatus: this.constants.awaitingPlayer,
-                currentNumber: -1
+                currentNumber: -1.5
             };
             try {
                 gameID = await this.dbService.create(newGame);
             } catch (error) {
                 console.log("ERROR: error while creating object \n" + error)
+                throw new Error("Error in register controller registerPlayer while trying to create a game: "+ JSON.stringify(error));
             }
             return {
                 playerID: playerID,
@@ -52,10 +55,11 @@ module.exports = class RegisterController {
                 updatedDoc = await this.dbService.update(game);
 
             } catch (error) {
-                //TODO: handle this error;
+                this.l.error("Error in register controller registerPlayer while trying to join the game: "+ JSON.stringify(error));
+                throw new Error("Error in register controller registerPlayer while trying to join the game: "+ JSON.stringify(error));
             }
             gameID = updatedDoc._id;
-            
+
             return {
                 playerID: playerID,
                 gameID: gameID,
@@ -63,7 +67,7 @@ module.exports = class RegisterController {
             }
         }
 
-      
+
     }
 
 }

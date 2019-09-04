@@ -10,6 +10,7 @@ services:
       - LOW
       - HIGH
       - SOCKET_URL
+      - PORT
     working_dir : /${WORKING_DIR}
     image: "node:10"
     volumes: 

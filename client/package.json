@@ -13,7 +13,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodejs run-client.js",
-    "dev": "nodemon run-client.js localhost 4000"
+    "dev": "nodemon run-client.js localhost ${PORT}"
   },
   "keywords": [],
   "author": "",

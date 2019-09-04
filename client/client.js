@@ -50,32 +50,44 @@ module.exports = class Client {
       playerID: this.id,
       currentNumber: number
     }
-    this.l.info("send event issued for number" + number);
+    this.l.info("send event issued for number: " + number);
     this.client.emit("number", gamePayload);
   }
 
+  // Boundaries are inclusive 
   computeNumber() {
     let newNumber;
     if (this.startGame) {
-      const randInt = this.randomInt(3, 100);
+      const randInt = this.randomInt(process.env.LOW, process.env.HIGH);
+      if (randInt === 0) randInt += 1;
       this.startGame = false;
       return randInt;
     }
 
-    if ((this.currentNumber + 1) % 3 == 0) {
+    if (this.currentNumber === 1) {
+      newNumber = this.currentNumber + 1;
+      this.l.info("The new number is: " + newNumber);
+      return newNumber;
+    }
+    if(this.currentNumber === -1) {
+      newNumber = this.currentNumber - 1;
+      this.l.info("The new number is: " + newNumber);
+      return newNumber;
+    }
+    if ((this.currentNumber + 1) % 3 === 0) {
 
       this.currentNumber += 1;
       newNumber = this.currentNumber / 3;
       this.l.info("The new number is: " + newNumber);
       return newNumber;
 
-    } else if ((this.currentNumber % 3) == 0) {
+    } else if ((this.currentNumber % 3) === 0) {
 
       newNumber = this.currentNumber / 3;
       this.l.info("The new number is: " + newNumber);
       return newNumber;
 
-    } else if ((this.currentNumber - 1) % 3 == 0) {
+    } else if ((this.currentNumber - 1) % 3 === 0) {
 
       this.currentNumber -= 1;
       newNumber = this.currentNumber / 3;
@@ -97,9 +109,13 @@ module.exports = class Client {
 
   }
   handleErr() {
-    this.client.on("Error", (errorMsg)=> {
-      this.l.info("ERROR: "+ JSON.stringify(errorMsg));
+    this.client.on("Error", (errorMsg) => {
+      this.l.info("ERROR: " + JSON.stringify(errorMsg));
     });
+  }
+  disconnect() {
+    this.l.info("disconnect event fired");
+    this.client.emit("disconnect","");
   }
 
 }

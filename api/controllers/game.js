@@ -1,7 +1,9 @@
+const logger = require("../config/logger");
 module.exports = class GameController {
     constructor(databaseService, constants) {
         this.dbService = databaseService;
         this.constants = constants;
+        this.l = logger();
     }
 
     async setNumber(data) {
@@ -15,25 +17,38 @@ module.exports = class GameController {
         try {
             updatedGame = await this.dbService.update(game);
         } catch (error) {
-            console.log("ERROR in game controller setNumber : " + err);
+            this.l.error("ERROR in game controller setNumber : " + err);
+            throw new Error("Error in game controller setNumber " + JSON.stringify(error));
         }
         if (updatedGame.currentNumber !== data.currentNumber) {
-            console.log("DEBUG: number in database is  " + updatedGame.currentNumber);
-            console.log("DEBUG: game object in database is  " + JSON.stringify(updatedGame));
-
+            this.l.debug("DEBUG: number in database is  " + updatedGame.currentNumber);
+            this.l.debug("DEBUG: game object in database is  " + JSON.stringify(updatedGame));
             throw new Error("current number in Database was not updated");
         }
-
     }
 
     async getNumber(data) {
         // pull document by id 
-        const game = await this.getGame(data);
+        let game;
+        try {
+            game = await this.getGame(data);
+
+        } catch (error) {
+            this.l.error("Error in game controller getNumber " + JSON.stringify(error));
+            throw new Error("Error in game controller getNumber " + JSON.stringify(error));
+        }
         return game.currentNumber;
     }
 
     async doesGameExist(data) {
-        const game = await this.getGame(data);
+        let game;
+        try {
+            game = await this.getGame(data);
+
+        } catch (error) {
+            this.l.error("Error in game controller doesGameExist " + JSON.stringify(error));
+            throw new Error("Error in game controller doesGameExist " + JSON.stringify(error));
+        }
         if (game) return true;
         return false;
     }
@@ -45,7 +60,8 @@ module.exports = class GameController {
             game = await this.dbService.findById(data.gameID);
 
         } catch (error) {
-            console.log("ERROR in game controller getGame : " + error);
+            this.l.error("Error in game controller getGame " + JSON.stringify(error))
+            throw new Error("Error in game controller get game " + JSON.stringify(error));
         }
         return game;
     }

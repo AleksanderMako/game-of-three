@@ -10,5 +10,5 @@ export PROJECT_NAME=clientapp1
 #Application settings 
 export SOCKET_URL=http://api:3000
 export LOW=3
-export HIGH=100
+export HIGH=1000
 #command to run the file is source env.sh 
