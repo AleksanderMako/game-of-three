@@ -36,9 +36,18 @@ module.exports = class Client {
         if (data.currentNumber) {
           this.currentNumber = data.currentNumber;
           this.startGame = false;
+          resolve({
+            startGame: this.startGame,
+            currentNumber: data.currentNumber
+          });
         }
-        else this.startGame = true;
-        resolve();
+        else {
+          this.startGame = true;
+          resolve({
+            startGame: this.startGame,
+            currentNumber: -1.5
+          });
+        }
       });
     });
 
@@ -69,7 +78,7 @@ module.exports = class Client {
       this.l.info("The new number is: " + newNumber);
       return newNumber;
     }
-    if(this.currentNumber === -1) {
+    if (this.currentNumber === -1) {
       newNumber = this.currentNumber - 1;
       this.l.info("The new number is: " + newNumber);
       return newNumber;
@@ -103,7 +112,7 @@ module.exports = class Client {
     return new Promise((resolve, reject) => {
       this.client.on("get-number", (number) => {
         this.currentNumber = number;
-        resolve();
+        resolve(number);
       });
     });
 
@@ -115,7 +124,7 @@ module.exports = class Client {
   }
   disconnect() {
     this.l.info("disconnect event fired");
-    this.client.emit("disconnect","");
+    this.client.emit("disconnect", "");
   }
 
 }

@@ -1,6 +1,8 @@
 var app = require('express')();
 var server = require('http').createServer(app);
-var io = require('socket.io')(server);
+var io = require('socket.io')(server, {
+    pingTimeout:25000
+});
 var logger = require("./config/logger");
 module.exports = class Server {
 
@@ -43,7 +45,7 @@ module.exports = class Server {
             // set number  event 
             // data has gameID,PID, current number 
             socket.on("number", async (data) => {
-                this.l.info("server received number request");
+                this.l.info("server received number request for number: "+data.currentNumber);
                 this.validateNumberEvent(data, socket);
 
                 try {
@@ -92,6 +94,7 @@ module.exports = class Server {
             else throw new Error("you are not a player in the game with ID: " + data.gameID);
         } return;
     }
+    // TODO: should probably throw or return some value 
     validateRegisterEvent(data, socket) {
         if (data) {
             socket.emit("Error", "register event does not require data");

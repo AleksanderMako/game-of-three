@@ -4,6 +4,7 @@
   "description": "",
   "main": "client.js",
   "dependencies": {
+    "readline-sync": "1.4.10",
     "socket.io-client": "2.2.0",
     "winston": "3.2.1"
   },
