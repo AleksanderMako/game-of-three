@@ -17,8 +17,8 @@
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha",
-    "bot": "nodejs run-bot.js",
-    "client": "nodejs run-client.js",
+    "bot": "node run-bot.js",
+    "client": "node run-client.js",
     "dev": "nodemon ${DEV_MODE_FILENAME}.js localhost ${PORT}"
   },
   "keywords": [],

@@ -146,7 +146,7 @@ module.exports = class Server {
             err = new Error("number event requires the player ID");
             this.l.error("Missing the player ID");
         }
-        else if (!data.currentNumber) {
+        else if (!data.currentNumber && data.currentNumber !==0) {
             err = new Error("number event requires the computed number");
             this.l.error("Missing the current number");
         }

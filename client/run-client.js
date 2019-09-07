@@ -2,32 +2,6 @@ const client = require("./client");
 const logger = require("./config/logger");
 const readlineSync = require('readline-sync');
 
-// async function runBot() {
-//     const l = logger();
-//     l.info("The application is starting in Bot mode!");
-
-//     const c = new client();
-//     await c.connected();
-//     await c.register();
-//     c.hadnleGameOver();
-//     const number = c.computeNumber();
-//     await c.sendNumber(number);
-//     c.handleErr();
-//     // game loop 
-//     while (true) {
-//         c.handleErr();
-//         await c.getNumber();
-//         const number = c.computeNumber();
-//         if (number === 1) {
-//             l.info("You have won the game ! ")
-//             c.gameOver();
-//             c.disconnect();
-//             break;
-//         } else {
-//            await  c.sendNumber(number);
-//         }
-//     }
-// }
 async function runUserMode() {
     process.env.SOCKET_URL="http://localhost:3000";
     process.env.LOW=3;
@@ -86,10 +60,11 @@ function validateUserChoice(userNumber, serverNumber, logger) {
         if ((serverNumber + 1) / 3 === userNumber) break;
         else if ((serverNumber / 3) === userNumber) break;
         else if ((serverNumber - 1) / 3 === userNumber) break;
-        else {
+        else {// TODO:FIX VALIDATION BUG 
             while (serverNumber === 1 || serverNumber === -1 || serverNumber === 0) {
                 logger.info("you need to add  1 to the number you got");
                 userNumber = readlineSync.questionInt("Enter your computed number: ");
+                serverNumber=userNumber;
             }
             if(userNumber === 2 || userNumber === 0 || userNumber === 1 ) break;
         
