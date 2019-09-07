@@ -9,13 +9,21 @@ module.exports = class GameController {
     async setNumber(data) {
         // pull document by id 
         let updatedGame;
-        const game = await this.getGame(data);
+        let game;
+        try {
+            game = await this.getGame(data);
+
+        } catch (error) {
+            this.l.error("ERROR in game controller setNumber : " + err);
+            throw new Error("Error in game controller setNumber " + JSON.stringify(error));
+        }
 
         // set the currentNumber to data.number
         game.currentNumber = data.currentNumber;
 
         try {
             updatedGame = await this.dbService.update(game);
+
         } catch (error) {
             this.l.error("ERROR in game controller setNumber : " + err);
             throw new Error("Error in game controller setNumber " + JSON.stringify(error));

@@ -1,0 +1,19 @@
+version: "3.5"
+networks:
+  socket-net: 
+     name: ${BOT_DOCKER_NETWORK_NAME}
+services:
+  bot_client:
+     container_name: ${CONTAINER_NAME}
+     environment:
+       - LOW
+       - HIGH
+       - SOCKET_URL
+       - PORT
+       - MODE=bot
+     build: .
+     command: bash -c "npm run bot"
+     ports: 
+       - ${PORT}:${PORT}
+     networks:
+       - socket-net

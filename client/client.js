@@ -60,7 +60,13 @@ module.exports = class Client {
       currentNumber: number
     }
     this.l.info("send event issued for number: " + number);
-    this.client.emit("number", gamePayload);
+    return new Promise((resolve, reject) => {
+      this.client.emit("number", gamePayload, function (ack) {
+        if(ack)resolve();
+        reject();
+      });
+    });
+
   }
 
   // Boundaries are inclusive 
@@ -73,13 +79,8 @@ module.exports = class Client {
       return randInt;
     }
 
-    if (this.currentNumber === 1) {
+    if (this.currentNumber === 1 || this.currentNumber === -1 || this.currentNumber === 0) {
       newNumber = this.currentNumber + 1;
-      this.l.info("The new number is: " + newNumber);
-      return newNumber;
-    }
-    if (this.currentNumber === -1) {
-      newNumber = this.currentNumber - 1;
       this.l.info("The new number is: " + newNumber);
       return newNumber;
     }
@@ -124,7 +125,21 @@ module.exports = class Client {
   }
   disconnect() {
     this.l.info("disconnect event fired");
-    this.client.emit("disconnect", "");
+    this.client.emit("connectiondown", "");
   }
-
+  gameOver() {
+    this.l.info("gameOver event fired");
+    const gameOver = {
+      gameID: this.gameID,
+      playerID: this.id,
+      message: "Game Over you have lost!"
+    }
+    this.client.emit("gameOver", gameOver);
+  }
+  hadnleGameOver() {
+    this.client.on("gameOver-gg", (message) => {
+      this.l.info(message);
+      this.disconnect();
+    });
+  }
 }

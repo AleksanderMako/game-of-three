@@ -36,7 +36,7 @@ module.exports = class RegisterController {
             try {
                 gameID = await this.dbService.create(newGame);
             } catch (error) {
-                console.log("ERROR: error while creating object \n" + error)
+                this.l.error("ERROR: error while creating object \n" + error)
                 throw new Error("Error in register controller registerPlayer while trying to create a game: "+ JSON.stringify(error));
             }
             return {

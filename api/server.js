@@ -1,7 +1,8 @@
+require('dotenv').config();
 var app = require('express')();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server, {
-    pingTimeout:25000
+    pingTimeout: 60000,
 });
 var logger = require("./config/logger");
 module.exports = class Server {
@@ -44,13 +45,19 @@ module.exports = class Server {
 
             // set number  event 
             // data has gameID,PID, current number 
-            socket.on("number", async (data) => {
-                this.l.info("server received number request for number: "+data.currentNumber);
-                this.validateNumberEvent(data, socket);
-
+            socket.on("number", async (data, ack) => {
+                this.l.info("server received number request for number: " + data.currentNumber);
+                let err = this.validateNumberEvent(data);
+                if (err) {
+                    this.l.error(err);
+                    socket.emit("Error", err);
+                    return;
+                }
                 try {
                     if (this.gameController.doesGameExist(data)) {
                         await this.gameController.setNumber(data);
+                        this.l.info("setgame executed");
+                        ack(true);
                     }
                     else socket.emit("Error", "The game ID: " + data.gameID + " does not correspond to any ongoing game");
 
@@ -71,6 +78,34 @@ module.exports = class Server {
                 }
                 // end of number event 
             });
+
+            socket.on("gameOver", async (message) => {
+                try {
+                    const receivingSocket = await this.getSocket(message);
+                    if (receivingSocket) {
+                        receivingSocket.emit("gameOver-gg", message.message);
+                    }
+
+                } catch (error) {
+                    this.l.error("while retreiving socket " + error);
+                    socket.emit("Error", error);
+                }
+            });
+            
+            // disconnect on user demand 
+            socket.on("connectiondown", () => {
+                this.l.info("Got a disconnection request");
+                this.connectionList.forEach((value, key, m) => {
+                    if (value === socket) {
+                        m.delete(key);
+                        this.l.info("Socket disconected");
+                        socket.disconnect();
+                    }
+                });
+
+            });
+
+            // disconnect event fired by IO lib 
             socket.on("disconnect", () => {
                 this.connectionList.forEach((value, key, m) => {
                     if (value === socket) {
@@ -78,10 +113,10 @@ module.exports = class Server {
                         this.l.info("Socket disconected");
                     }
                 });
-            });
+            })
         })
 
-        this.server.listen(3000, () => {
+        this.server.listen(process.env.API_PORT, () => {
             this.l.info(" server is running ");
         });
     }
@@ -94,26 +129,29 @@ module.exports = class Server {
             else throw new Error("you are not a player in the game with ID: " + data.gameID);
         } return;
     }
-    // TODO: should probably throw or return some value 
+
     validateRegisterEvent(data, socket) {
         if (data) {
             socket.emit("Error", "register event does not require data");
             return;
         } return;
     }
-    validateNumberEvent(data, socket) {
+    validateNumberEvent(data) {
+        let err;
         if (!data.gameID) {
-            socket.emit("Error", "number event requires the game ID");
-            return;
+            err = new Error("number event requires the game ID");
+            this.l.error("Missing the game ID");
         }
         else if (!data.playerID) {
-            socket.emit("Error", "number event requires the player ID");
-            return;
+            err = new Error("number event requires the player ID");
+            this.l.error("Missing the player ID");
         }
         else if (!data.currentNumber) {
-            socket.emit("Error", "number event requires the computed number");
-            return;
+            err = new Error("number event requires the computed number");
+            this.l.error("Missing the current number");
         }
-        return;
+        if (err) return err.message;
+        else return;
+
     }
 }

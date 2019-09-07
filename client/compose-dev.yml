@@ -5,8 +5,6 @@ networks:
      name: ${DOCKER_NETWORK_NAME}
 services:
   client: 
-    stdin_open: ${STDIN_OPEN}
-    tty: ${TTY}
     container_name: ${CONTAINER_NAME}
     environment:
       - LOW
@@ -14,6 +12,7 @@ services:
       - SOCKET_URL
       - PORT
       - MODE
+      - DEV_MODE_FILENAME
     working_dir : /${WORKING_DIR}
     image: "node:10"
     volumes: 

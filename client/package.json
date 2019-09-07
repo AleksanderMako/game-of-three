@@ -4,17 +4,22 @@
   "description": "",
   "main": "client.js",
   "dependencies": {
+    "dotenv": "8.1.0",
     "readline-sync": "1.4.10",
     "socket.io-client": "2.2.0",
     "winston": "3.2.1"
   },
   "devDependencies": {
-    "nodemon": "1.19.1"
+    "chai": "4.2.0",
+    "mocha": "6.2.0",
+    "nodemon": "1.19.1",
+    "sinon": "7.4.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodejs run-client.js",
-    "dev": "nodemon run-client.js localhost ${PORT}"
+    "test": "./node_modules/mocha/bin/mocha",
+    "bot": "nodejs run-bot.js",
+    "client": "nodejs run-client.js",
+    "dev": "nodemon ${DEV_MODE_FILENAME}.js localhost ${PORT}"
   },
   "keywords": [],
   "author": "",

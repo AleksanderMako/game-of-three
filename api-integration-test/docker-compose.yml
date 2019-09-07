@@ -4,7 +4,7 @@ networks:
     external:
       name: socket-network
 services: 
-   client:
+   test:
      container_name: test
      build: .
      ports:

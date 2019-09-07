@@ -155,15 +155,15 @@ describe("game controller ", function () {
 
             try {
                 gameID = await dbService.create(game);
-                console.log("DEBUG: "+JSON.stringify(registrationDetails));
+                console.log("DEBUG: "+JSON.stringify(gameID));
             } catch (error) {
 
-                console.log("ERROR:" + error);
+                console.log("ERROR in arrange:" + error);
             }
 
             const data = {
-                gameId: gameID,
-                number: 5
+                gameID: gameID,
+                currentNumber: 5
             }
 
             //Act 
@@ -172,12 +172,12 @@ describe("game controller ", function () {
 
             } catch (error) {
 
-                console.log("ERROR:" + error);
+                console.log("ERROR in act :" + error);
             }
 
             //Assert 
             try {
-                updatedGame = await dbService.findById(data.gameId);
+                updatedGame = await dbService.findById(data.gameID);
             } catch (error) {
                 console.log("ERROR:" + error);
             }
