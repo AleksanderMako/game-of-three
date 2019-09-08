@@ -83,9 +83,24 @@ in the .env file set the TOOL variable to docker and the ENV variable to test
 and then run docker-compose -f compose-test.yml up --build 
 clean the enviroment with:
 docker rm -f $(docker ps -aq) by now most of the work is cached and it should be really fast.
+
 run the command docker-compose -f compose-e2e-test.yml up --build 
 navigate to the api-integration-test directory 
 set the variable TOOL to docker in the .env file and run docker-compose up --build 
+```
+
+#### Running the tests via npm
+
+```
+navigate inside the api folder 
+in the .env file set the TOOL variable to npm and the ENV variable to test
+npm install 
+npm run test
+
+then run a server with npm start 
+and navigate to api-integration-test directory
+set the variable TOOL to npm and then npm run test
+
 ```
 
 
