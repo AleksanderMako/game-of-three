@@ -3,7 +3,7 @@
 This solution consists of an API and client application both implemented with node.js.
 The API uses the socket.io library to facilitate communication between two instances of the client application.
 The API also makes use of a MongoDB instance to allow for more than one match to take place at the time.
-
+For detailed descriptions of the API and the client see the docs folder
 
 ## Getting Started
 
@@ -11,8 +11,8 @@ The API and the client application can both be run through npm and docker and ca
 
 ### Prerequisites
 
-Docker and Docker Compose with a 17.12.0+ Docker engine release.
-NPM 
+Docker and Docker Compose with a 17.12.0+ Docker engine release.  
+NPM  
 Node.js
 
 ### Running the software 
