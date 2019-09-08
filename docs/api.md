@@ -86,4 +86,40 @@ These values are used in the api to make it the code more readable and easy to f
 ### Config
 The config folder icludes utility methods for configuring the environment and setting up a winston logger.  
 
+### Server 
+The server is represented by two files namely serve.js and run server.js 
+server.js respondes to the following events:  
+* Connection
+* number
+* gameOver
+* connectiondown
+* disconnect  
+and if triggers the events:  
+* Error
+* register-response
+* gameOver-gg (good game) 
+* welcome
+
+The following logic is followed:  
+```
+1. Upon connection the server triggers the welcome event
+2. Upon registration the server takes note of the new user's ID and indexes a map with it where the socket object is saved.
+   1. The server returns the registration object through the register-response event
+3. Upon a number event the server 
+   1. If the game exists the server updates the current game 
+       1. Acknowledges that it has received the number
+       2. It fetches the other player's ID from the game and with it it takes the player's socket if it exists yet
+       3. If the receiving socket exists it sends the new number through that socket
+   3. If the game does not exist it broadcasts an error
+4. Upon connectiondown or disconnect event the server deletes the socket from the map and closes the connection to it.
+```
+
+The run-server.js file instantiates the objects of the application and injects all the dependencies as well as start the server.
+
+
+
+
+
+
+
 
