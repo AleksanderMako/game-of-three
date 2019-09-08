@@ -94,7 +94,7 @@ server.js respondes to the following events:
 * gameOver
 * connectiondown
 * disconnect  
-and if triggers the events:  
+and it triggers the events:  
 * Error
 * register-response
 * gameOver-gg (good game) 
