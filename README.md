@@ -16,6 +16,8 @@ NPM
 Node.js
 
 ### Running the software 
+To successfully run the application it is important to keep in mind that if the api starts outside the container a bot client can't start inside a container otherwise they will not be able to communicate.
+In addition the client application that accepts user input will always run through npm so that it can have access to stdin,stdout
 
 #### Run on Windows 
 
@@ -64,40 +66,26 @@ navigate to the client directory
 in the docker-bot-env.sh file set the LOW and HIGH variables to desired values
 in the docker-bot-env.sh set a desired PORT for the bot client,a PROJECT_NAME and a CONTAINER_NAME and save the file
 in the .env file in the same directory set the TOOL variable to docker
-give permissions to the run-docker-bot.sh script and execute it (./run-docker-bot.sh script)
+give permissions to the run-docker-bot.sh script and execute it (./run-docker-bot.sh )
 
 ```
-
-
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+The tests may be run inside of a container or through npm. 
 
-### Break down into end to end tests
-
-Explain what these tests test and why
+#### Running the tests via docker
 
 ```
-Give an example
+clean the environment with docker rm -f $(docker ps -aq) in case there are leftover containers
+navigate inside the api folder 
+in the .env file set the TOOL variable to docker and the ENV variable to test
+and then run docker-compose -f compose-test.yml up --build 
+clean the enviroment with:
+docker rm -f $(docker ps -aq) by now most of the work is cached and it should be really fast.
+run the command docker-compose -f compose-e2e-test.yml up --build 
+navigate to the api-integration-test directory 
+set the variable TOOL to docker in the .env file and run docker-compose up --build 
 ```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
 
 
