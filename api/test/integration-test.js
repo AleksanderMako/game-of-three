@@ -18,12 +18,14 @@ before(async function () {
     constants = new Constants();
     dbService = new databaseService(schema, constants);
     rController = new registerController(dbService, constants);
-    gController =new  gameController(dbService, constants);
+    gController = new gameController(dbService, constants);
 
 });
 
 afterEach(function (done) {
-    conn.collections.games.drop(() => { done(); })
+    conn.collections.games.drop(() => {
+        done();
+    })
 });
 
 describe("database service ", function () {
@@ -96,8 +98,7 @@ describe("register Controller ", function () {
                 conn.collections.games.countDocuments({}, (err, c) => {
                     if (err) {
                         reject(err);
-                    }
-                    else {
+                    } else {
                         resolve(c);
                     }
                 });
@@ -155,7 +156,6 @@ describe("game controller ", function () {
 
             try {
                 gameID = await dbService.create(game);
-                console.log("DEBUG: "+JSON.stringify(gameID));
             } catch (error) {
 
                 console.log("ERROR in arrange:" + error);

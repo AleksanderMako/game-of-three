@@ -16,7 +16,7 @@ services:
 
   
   database:
-    container_name: "db"
+    container_name: "testdb"
     image: mongo
     restart: always
     command: mongod --port 27019 --bind_ip_all
