@@ -7,7 +7,7 @@ The API also makes use of a MongoDB instance to allow for more than one match to
 
 ## Getting Started
 
-The api and the client application can both be run through npm and docker and can run on windows, linux and macOS.
+The API and the client application can both be run through npm and docker and can run on windows, linux and macOS.
 
 ### Prerequisites
 
@@ -16,7 +16,7 @@ NPM
 Node.js
 
 ### Running the software 
-To successfully run the application it is important to keep in mind that if the api starts outside the container a bot client can't start inside a container otherwise they will not be able to communicate.
+To successfully run the application it is important to keep in mind that if the API starts outside the container a bot client can't start inside a container otherwise they will not be able to communicate.
 In addition the client application that accepts user input will always run through npm so that it can have access to stdin,stdout
 
 #### Run on Windows 
