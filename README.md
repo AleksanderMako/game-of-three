@@ -24,6 +24,7 @@ The API will be listening on port 3000 by default on the host machine with a def
 
 Run the API:
 ```
+navigate to the api directory
 set the variable TOOL in the .env file to npm
 set the variable ENV in the .env file to production
 npm install 
@@ -33,6 +34,7 @@ npm start
 Run a bot client (player that playes without user interaction)
 
 ```
+navigate to the client directory
 set the variable TOOL in the .env file to npm 
 npm install 
 npm run bot
@@ -41,12 +43,32 @@ npm run bot
 Run a client that accepts user input 
 
 ```
+navigate to the client directory
 set the variable TOOL in the .env file to npm 
 npm install 
 npm run client 
 ```
+#### Running through docker and docker compose
 
-End with an example of getting some data out of the system or using it for a little demo
+Start the API:
+```
+navigate to the api directory
+set the variable TOOL in the .env file to docker
+set the variable ENV in the .env file to production
+docker-compose up --build
+```
+Run a bot client inside docker:
+
+```
+navigate to the client directory
+in the docker-bot-env.sh file set the LOW and HIGH variables to desired values
+in the docker-bot-env.sh set a desired PORT for the bot client,a PROJECT_NAME and a CONTAINER_NAME and save the file
+in the .env file in the same directory set the TOOL variable to docker
+give permissions to the run-docker-bot.sh script and execute it (./run-docker-bot.sh script)
+
+```
+
+
 
 ## Running the tests
 
