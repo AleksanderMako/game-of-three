@@ -2,7 +2,7 @@ version: "3.5"
 networks:
   socket-net:
     external:
-      name: socket-network
+      name: test-socket-network
 services: 
    test:
      container_name: test

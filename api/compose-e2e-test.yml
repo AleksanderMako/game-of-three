@@ -8,15 +8,15 @@ services:
     build: .
     ports:
       - 3000:3000
-    command: bash -c "npm run test"
+    command: bash -c "npm start"
     depends_on:
-      - database
+      - testdatabase
     networks:
      - test-net
 
   
-  database:
-    container_name: "db"
+  testdatabase:
+    container_name: "testdb"
     image: mongo
     restart: always
     command: mongod --port 27019 --bind_ip_all
