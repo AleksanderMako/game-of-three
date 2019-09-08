@@ -33,7 +33,6 @@ module.exports = class Server {
                 try {
 
                     const registrationData = await this.registerController.registerPlayer();
-                    this.l.debug("registration data " + JSON.stringify(registrationData) + "\n");
                     this.connectionList.set(registrationData.playerID, socket);
                     socket.emit("register-response", registrationData);
 
