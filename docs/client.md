@@ -46,5 +46,14 @@ The following protocol is followed by the bot:
 
 ```
 
+### Running the client in interactive mode
+
+The run client file represents the client which can interact with the user.
+The protocol here is very similiar however instead of a compute number method the client reads input and validates it  
+according to the game rules. 
+Exception here make scenarios where the number is negative. 
+If the number is negative the client in both modes operates by the same rules up until the number is reduced to  
+-1,1 or 0. When the game reaches one of these stages the natural goal of the client should be towards 2 and the user is expected to add 1 to these numbers.
+The client in interactive mode will validate these cases but the bot mode will increment the number by 1. 
 
 
