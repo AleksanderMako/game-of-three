@@ -61,3 +61,29 @@ The following logic is used isnide this method:
     3. return an object that has the user ID, GameID and the current number stored in the database
 ```
 
+#### Game controller 
+The game controller includes methods that deal with updating the game object and fetchin it from the database.  
+It is also implemented inside a class and expects a database service instance and a constancts object.  
+The methods of the controller are:  
+```
+setNumber which given a new number updates the game record.  
+getNumber which fetches the number currently stored.  
+getGame which fetches the entire game object.  
+and doesGameExist which given a game ID tries to find the corresponding object.
+```
+
+### Constants 
+This is a utility class that includes some variables with pre set values to act as a mnemonic.  
+For instance:  
+```
+online = true
+offline =false 
+closed = true
+awaitingPlayer = false 
+```
+These values are used in the api to make it the code more readable and easy to follow.
+
+### Config
+The config folder icludes utility methods for configuring the environment and setting up a winston logger.  
+
+
