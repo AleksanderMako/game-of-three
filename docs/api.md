@@ -47,7 +47,15 @@ This layer has two controllers:
 * Game Controller
 
 #### Register controller 
-The register controller is implemented in class and expets to receive a database service object and a constants object \
+The register controller is implemented in a class and expets to receive a database service object and a constants object \
 through the constructor of the class.  
+This controller has one main method which is the register method and is responsible for assigning players to games.  
+The following logic is used isnide this method:  
+```
+1. Search the database for an open game 
+2. If there are no open games make a new game record and generate an ID for the user  
+    1. Return an object that contains the new user ID and the game ID  
+3. 
 
+```
 
