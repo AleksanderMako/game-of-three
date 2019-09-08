@@ -1,12 +1,11 @@
 const client = require("./client");
 const logger = require("./config/logger");
 const readlineSync = require('readline-sync');
+const setEnvVariables = require("./config/settings");
 
 async function runUserMode() {
-    process.env.SOCKET_URL="http://localhost:3000";
-    process.env.LOW=3;
-    process.env.HIGH=2000;
-    
+    setEnvVariables();
+
     let newNumber;
     let userNumber;
     let correctUserNumber;
@@ -19,18 +18,17 @@ async function runUserMode() {
     c.hadnleGameOver();
     if (game.startGame) {
         const number = c.computeNumber();
-        l.info("game status is "+ game.startGame);
         await c.sendNumber(number);
         c.handleErr();
     } else {
         // handle start game as a player who joins 
         c.handleErr();
-       
+
         newNumber = game.currentNumber;
         l.info("The new number is: " + newNumber);
-        userNumber = readlineSync.questionInt("Enter your computed number: ");
+        userNumber = readlineSync.questionInt("Enter your computed number by adding -1,0 or 1 to the number you got and devide by 3: ");
         correctUserNumber = validateUserChoice(userNumber, newNumber, l);
-        if (correctUserNumber === 1) {
+        if (correctUserNumber === 1 && c.verifyWinCondition()) {
             l.info("You have won the game ! ")
             c.gameOver();
             c.disconnect();
@@ -44,9 +42,9 @@ async function runUserMode() {
         c.handleErr();
         newNumber = await c.getNumber();
         l.info("The number pulled from the server is: " + newNumber);
-        userNumber = readlineSync.questionInt("Enter your computed number: ");
+        userNumber = readlineSync.questionInt("Enter your computed number by adding -1,0 or 1 to the number you got and devide by 3: ");
         correctUserNumber = validateUserChoice(userNumber, newNumber, l);
-        if (correctUserNumber === 1) {
+        if (correctUserNumber === 1 && c.verifyWinCondition()) {
             l.info("You have won the game ! ")
             c.gameOver();
             c.disconnect();
@@ -55,19 +53,19 @@ async function runUserMode() {
     }
 }
 function validateUserChoice(userNumber, serverNumber, logger) {
-   
+
+
     while (true) {
         if ((serverNumber + 1) / 3 === userNumber) break;
         else if ((serverNumber / 3) === userNumber) break;
         else if ((serverNumber - 1) / 3 === userNumber) break;
-        else {// TODO:FIX VALIDATION BUG 
-            while (serverNumber === 1 || serverNumber === -1 || serverNumber === 0) {
-                logger.info("you need to add  1 to the number you got");
-                userNumber = readlineSync.questionInt("Enter your computed number: ");
-                serverNumber=userNumber;
-            }
-            if(userNumber === 2 || userNumber === 0 || userNumber === 1 ) break;
-        
+        else if (serverNumber === 1 || serverNumber === -1 || serverNumber === 0) {
+            if (userNumber === 2 || userNumber === 0 || userNumber === 1) break;
+            logger.info("you need to add  1 to the number you got due to server number being: " + serverNumber);
+            userNumber = readlineSync.questionInt("Enter your computed number: ");
+        }
+        else {
+
             logger.info("you need to add -1,0 or 1 to the number you got and devide by 3");
             userNumber = readlineSync.questionInt("Enter your computed number: ");
         }

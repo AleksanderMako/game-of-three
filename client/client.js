@@ -86,8 +86,8 @@ module.exports = class Client {
     }
     if ((this.currentNumber + 1) % 3 === 0) {
 
-      this.currentNumber += 1;
-      newNumber = this.currentNumber / 3;
+     // this.currentNumber += 1;
+      newNumber = (this.currentNumber+1) / 3;
       this.l.info("The new number is: " + newNumber);
       return newNumber;
 
@@ -99,8 +99,8 @@ module.exports = class Client {
 
     } else if ((this.currentNumber - 1) % 3 === 0) {
 
-      this.currentNumber -= 1;
-      newNumber = this.currentNumber / 3;
+      // this.currentNumber -= 1;
+      newNumber = (this.currentNumber -1)/ 3;
       this.l.info("The new number is: " + newNumber);
       return newNumber;
     }
@@ -141,5 +141,11 @@ module.exports = class Client {
       this.l.info(message);
       this.disconnect();
     });
+  }
+  verifyWinCondition(){
+    if((this.currentNumber+1)%3 === 0)return true;
+    else if((this.currentNumber-1)%3 === 0)return true;
+    else if((this.currentNumber%3)===0 && this.currentNumber !==0)return true;
+    return false;
   }
 }

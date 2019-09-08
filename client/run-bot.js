@@ -1,11 +1,9 @@
 
 const client = require("./client");
 const logger = require("./config/logger");
-const getSocket = require("./config/settings");
+const setEnvVariables = require("./config/settings");
 async function runBot() {
-    getSocket();
-    process.env.LOW = 3;
-    process.env.HIGH = 2000;
+    setEnvVariables();
 
     const l = logger();
     l.info("The application is starting in Bot mode!");
@@ -15,14 +13,19 @@ async function runBot() {
     await c.register();
     c.hadnleGameOver();
     const number = c.computeNumber();
-    await c.sendNumber(number);
+    if (number === 1 && c.verifyWinCondition()) {
+        l.info("You have won the game ! ")
+        c.gameOver();
+        c.disconnect();
+    }
+    else await c.sendNumber(number);
     c.handleErr();
     // game loop 
     while (true) {
         c.handleErr();
-        await c.getNumber();
+        const newNumber = await c.getNumber();
         const number = c.computeNumber();
-        if (number === 1) {
+        if (number === 1 && c.verifyWinCondition()) {
             l.info("You have won the game ! ")
             c.gameOver();
             c.disconnect();
@@ -32,4 +35,5 @@ async function runBot() {
         }
     }
 }
+
 runBot();

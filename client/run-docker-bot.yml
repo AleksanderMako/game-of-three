@@ -10,7 +10,7 @@ services:
        - HIGH
        - SOCKET_URL
        - PORT
-       - MODE=bot
+       - TOOL
      build: .
      command: bash -c "npm run bot"
      ports: 
