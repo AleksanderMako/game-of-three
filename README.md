@@ -1,87 +1,106 @@
-# Project Title
+# Game of Three
 
-One Paragraph of project description goes here
+This solution consits of an API and client application both implemented with node.js.
+The API uses the socket.io library to facilitate communication between two instances of the client application.
+The API also makes use of a MongoDB instance to allow for more than one match to take place at the time.
+
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+The api and the client application can both be run through npm and docker and can run on windows, linux and macOS.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+Docker and Docker Compose with a 17.12.0+ Docker engine release.
+NPM 
+Node.js
+
+### Running the software 
+To successfully run the application it is important to keep in mind that if the api starts outside the container a bot client can't start inside a container otherwise they will not be able to communicate.
+In addition the client application that accepts user input will always run through npm so that it can have access to stdin,stdout
+
+#### Run on Windows 
+
+To run the software on Windows use npm. You will not need a Mongo instance running on Windows as there is one configured to run on the MongoDB atlas cluster.
+The API will be listening on port 3000 by default on the host machine with a default 1 minute connection timeout configured to allow for user interaction on the console.
+
+Run the API:
+```
+navigate to the api directory
+set the variable TOOL in the .env file to npm
+set the variable ENV in the .env file to production
+npm install 
+npm start 
+```
+
+Run a bot client (player that playes without user interaction)
 
 ```
-Give examples
+navigate to the client directory
+set the variable TOOL in the .env file to npm 
+npm install 
+npm run bot
 ```
 
-### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
+Run a client that accepts user input 
 
 ```
-Give the example
+navigate to the client directory
+set the variable TOOL in the .env file to npm 
+npm install 
+npm run client 
 ```
+#### Running through docker and docker compose
 
-And repeat
+Start the API:
+```
+navigate to the api directory
+set the variable TOOL in the .env file to docker
+set the variable ENV in the .env file to production
+docker-compose up --build
+```
+Run a bot client inside docker:
 
 ```
-until finished
-```
+navigate to the client directory
+in the docker-bot-env.sh file set the LOW and HIGH variables to desired values
+in the docker-bot-env.sh set a desired PORT for the bot client,a PROJECT_NAME and a CONTAINER_NAME and save the file
+in the .env file in the same directory set the TOOL variable to docker
+give permissions to the run-docker-bot.sh script and execute it (./run-docker-bot.sh )
 
-End with an example of getting some data out of the system or using it for a little demo
+```
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+The tests may be run inside of a container or through npm. 
 
-### Break down into end to end tests
-
-Explain what these tests test and why
+#### Running the tests via docker
 
 ```
-Give an example
+clean the environment with docker rm -f $(docker ps -aq) in case there are leftover containers
+navigate inside the api folder 
+in the .env file set the TOOL variable to docker and the ENV variable to test
+and then run docker-compose -f compose-test.yml up --build 
+clean the enviroment with:
+docker rm -f $(docker ps -aq) by now most of the work is cached and it should be really fast.
+
+run the command docker-compose -f compose-e2e-test.yml up --build 
+navigate to the api-integration-test directory 
+set the variable TOOL to docker in the .env file and run docker-compose up --build 
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
+#### Running the tests via npm
 
 ```
-Give an example
+navigate inside the api folder 
+in the .env file set the TOOL variable to npm and the ENV variable to test
+npm install 
+npm run test
+
+then run a server with npm start 
+and navigate to api-integration-test directory
+set the variable TOOL to npm and then npm run test
+
 ```
 
-## Deployment
 
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
