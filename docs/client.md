@@ -10,7 +10,7 @@ client which holds the connection object to the server
 currentNumber which is the number fetched from the server
 startGame which indicates if the client should start the game.
 ```
-The following logic is followed on deciding whos tarts the game:  
+The following logic is used to decide who starts the game:  
 ```
 1. If the registration object returned by the server contains a number property then
    1. this means the server joined the client to an open game started by someone else
@@ -22,7 +22,7 @@ The following logic is followed on deciding whos tarts the game:
 ### Running the client as bot
 
 The run bot file includes the logic needed for a client to play on its own. 
-The clients and server interaction can be broken down to 2 phases:  
+The client and server interaction can be broken down into 2 phases:  
 1. The "handshake" which involves the handoff of the first number between the two components.
 2. The game loop which handles every other game interaction 
 
@@ -48,12 +48,11 @@ The following protocol is followed by the bot:
 
 ### Running the client in interactive mode
 
-The run client file represents the client which can interact with the user.
-The protocol here is very similiar however instead of a compute number method the client reads input and validates it  
-according to the game rules. 
-Exception here make scenarios where the number is negative. 
-If the number is negative the client in both modes operates by the same rules up until the number is reduced to  
--1,1 or 0. When the game reaches one of these stages the natural goal of the client should be towards 2 and the user is expected to add 1 to these numbers.
+The run-client file represents the client which can interact with the user.
+The protocol here is very similiar to the one in bot mode. However instead of a compute number method, the client reads input and validates it according to the game rules.  
+Exceptions here are scenarios where the number is negative. 
+If the number is negative, the client in both modes operates by the same rules up until the number is reduced to  
+-1,1 or 0. When the game reaches one of these stages, the natural goal of the client should be progressing towards 2 and the user is expected to add 1 to these numbers.
 The client in interactive mode will validate these cases but the bot mode will increment the number by 1. 
 
 
