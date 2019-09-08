@@ -54,8 +54,10 @@ The following logic is used isnide this method:
 ```
 1. Search the database for an open game 
 2. If there are no open games make a new game record and generate an ID for the user  
-    1. Return an object that contains the new user ID and the game ID  
-3. 
-
+    * Return an object that contains the new user ID and the game ID  
+3. If there is an open game  
+    1. generate the ID for the user  
+    2. update the game record with the new ID  
+    3. return an object that has the user ID, GameID and the current number stored in the database
 ```
 
