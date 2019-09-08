@@ -1,6 +1,6 @@
 # Game of Three
 
-This solution consits of an API and client application both implemented with node.js.
+This solution consists of an API and client application both implemented with node.js.
 The API uses the socket.io library to facilitate communication between two instances of the client application.
 The API also makes use of a MongoDB instance to allow for more than one match to take place at the time.
 
