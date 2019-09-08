@@ -1,6 +1,6 @@
 # Game of Three API
 
-The game of three API uses the socket.Io library to accept and pass messageds around and is organized like so: \  
+The game of three API uses the socket.Io library to accept and pass messageds around and is organized like so:   
 
 * Controllers
 * Services
@@ -28,7 +28,7 @@ and currentNumber of type number which is a place holder for the number that has
 The API also has a layer of services that it uses to interact with the database.\
 The first service is called a connection service and wraps the connection method inside a promise.\
 The second service is called the database service and it is implemented using the class syntax.\
-The database service includes methods for CRUD oprations which can be used in other layers of the application. \  
+The database service includes methods for CRUD oprations which can be used in other layers of the application.  
 
 #### Database service methods 
 
@@ -48,6 +48,6 @@ This layer has two controllers:\
 
 #### Register controller 
 The register controller is implemented in class and expets to receive a database service object and a constants object \
-through the constructor of the class.\
+through the constructor of the class.  
 
 
