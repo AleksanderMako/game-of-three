@@ -11,8 +11,8 @@ The game of three API uses the socket.Io library to accept and pass messageds ar
 ### Models
 
 The api uses a Mongo instance for persistance and it persists some amount of data to allow for more than one game 
-being played at the time.\ 
-Therefore the api has a game model which looks like this:\
+being played at the time.  
+Therefore the api has a game model which looks like this:  
 
 ```
 player1ID of type string.
@@ -42,7 +42,7 @@ update
 ### Controllers 
 
 The controllers layer is where the api includes most of its logic with regards to registration and game operations.\
-This layer has two controllers:\
+This layer has two controllers:
 * Register Controller 
 * Game Controller
 
