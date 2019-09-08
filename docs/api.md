@@ -1,18 +1,18 @@
 # Game of Three API
 
-The game of three API uses the socket.Io library to accept and pass messageds around and is organized like so:   
+The Game of Three API uses the socket.Io library to accept and pass messageds around and is organized in the following way:   
 
 * Controllers
 * Services
 * Models
-* Config
+* Configurations
 * Constants
 
 ### Models
 
-The api uses a Mongo instance for persistance and it persists some amount of data to allow for more than one game 
-being played at the time.  
-Therefore the api has a game model which looks like this:  
+The API uses a Mongo instance for persistance and it persists some amount of data to allow for more than one game 
+to be played at the time.  
+Therefore, the API has a game model which looks like this:  
 
 ```
 player1ID of type string.
@@ -25,8 +25,8 @@ and currentNumber of type number which is a place holder for the number that has
 ```
 ### Services
 
-The API also has a layer of services that it uses to interact with the database.\
-The first service is called a connection service and wraps the connection method inside a promise.\
+The API also has a layer of services which it uses to interact with the database.\
+The first service is called connection service and it wraps the connection method inside a promise.\
 The second service is called the database service and it is implemented using the class syntax.\
 The database service includes methods for CRUD oprations which can be used in other layers of the application.  
 
@@ -41,16 +41,16 @@ update
 
 ### Controllers 
 
-The controllers layer is where the api includes most of its logic with regards to registration and game operations.\
+The controllers layer is where the API includes most of its logic with regards to registration and game operations.\
 This layer has two controllers:
 * Register Controller 
 * Game Controller
 
 #### Register controller 
-The register controller is implemented in a class and expets to receive a database service object and a constants object \
+The register controller is implemented in a class and expects to receive a database service object and a constants object \
 through the constructor of the class.  
-This controller has one main method which is the register method and is responsible for assigning players to games.  
-The following logic is used isnide this method:  
+This controller has one main method which is responsible for assigning players to games.  
+The following logic is used inside this method:  
 ```
 1. Search the database for an open game 
 2. If there are no open games make a new game record and generate an ID for the user  
@@ -62,7 +62,7 @@ The following logic is used isnide this method:
 ```
 
 #### Game controller 
-The game controller includes methods that deal with updating the game object and fetchin it from the database.  
+The game controller includes methods that deal with updating the game object and fetching it from the database.  
 It is also implemented inside a class and expects a database service instance and a constancts object.  
 The methods of the controller are:  
 ```
@@ -73,7 +73,7 @@ and doesGameExist which given a game ID tries to find the corresponding object.
 ```
 
 ### Constants 
-This is a utility class that includes some variables with pre set values to act as a mnemonic.  
+This is a utility class that includes some variables with pre set values to act as a mnemonics for values.  
 For instance:  
 ```
 online = true
@@ -81,15 +81,15 @@ offline =false
 closed = true
 awaitingPlayer = false 
 ```
-These values are used in the api to make it the code more readable and easy to follow.
+These values are used in the API to make the code more readable and easy to follow.
 
 ### Config
-The config folder icludes utility methods for configuring the environment and setting up a winston logger.  
+The config folder includes utility methods for configuring the environment and setting up a winston logger.  
 
 ### Server 
-The server is represented by two files namely serve.js and run server.js 
+The server is represented by two files, namely serve.js and run-server.js.  
 server.js respondes to the following events:  
-* Connection
+* connection
 * number
 * gameOver
 * connectiondown
@@ -114,7 +114,7 @@ The following logic is followed:
 4. Upon connectiondown or disconnect event the server deletes the socket from the map and closes the connection to it.
 ```
 
-The run-server.js file instantiates the objects of the application and injects all the dependencies as well as start the server.
+The run-server.js file instantiates the objects of the application and injects all the dependencies as well as it starts the server.
 
 
 
